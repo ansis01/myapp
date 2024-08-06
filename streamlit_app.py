@@ -2,7 +2,8 @@ import streamlit as st
 import random
 import string
 import os
-import yt_dlp as youtube_dl
+import youtube_dl
+import yt_dlp
 import instaloader
 
 
