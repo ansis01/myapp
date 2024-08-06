@@ -4,7 +4,6 @@ import string
 import os
 import yt_dlp as youtube_dl
 import instaloader
-import validators
 
 
 def generate_password(length):
