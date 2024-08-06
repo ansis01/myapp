@@ -4,8 +4,9 @@ import string
 import os
 import yt_dlp as youtube_dl
 import instaloader
+from signal import signal, SIGPIPE, SIG_DFL
 
-
+signal(SIGPIPE,SIG_DFL)
 
 def generate_password(length):
     characters = string.ascii_letters + string.digits + string.punctuation
