@@ -5,7 +5,6 @@ import yt_dlp as youtube_dl
 import instaloader
 import requests
 from signal import signal, SIGPIPE, SIG_DFL
-signal(SIGPIPE,SIG_DFL)
 def generate_password(length):
     characters = string.ascii_letters + string.digits + string.punctuation
     return ''.join(random.choice(characters) for i in range(length))
@@ -25,6 +24,7 @@ def download_youtube_video(link):
         }
 
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            signal(SIGPIPE,SIG_DFL)
             info_dict = ydl.extract_info(link, download=False)
             video_url = info_dict['url']  # This provides the direct video URL
 
