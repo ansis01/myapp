@@ -15,7 +15,6 @@ def generate_password(length):
 # Fonction pour télécharger une vidéo YouTube
 def download_youtube_video(link):
     try:
-        signal(SIGPIPE,SIG_DFL)
         if (("youtube.com/watch?v=") not in link) or ("script" in link) or len(link) > 75 or ("https://" not in link):
             st.write('URL invalide.')
             return None
