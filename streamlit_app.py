@@ -17,7 +17,6 @@ def download_youtube_video(link):
         if (("youtube.com/watch?v=") not in link ) or ("script" in link) or len(link) >75 or ("https://" not in link):
             st.write('URL invalide.')
             return None
-        #ghfj89JMDEmcdji!!!UJCID
         download_dir = 'downloads'
         if not os.path.exists(download_dir):
             os.makedirs(download_dir)
