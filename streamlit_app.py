@@ -37,9 +37,12 @@ def download_youtube_video(link):
     except RequestException as e:
         st.write(f'Erreur lors du téléchargement: {e}')
         return None
-    except Exception as e:
-        st.write(f'Erreur inconnue lors du téléchargement: {e}')
-        return None
+    except Exception as e :
+        if e == "[Errno 32] Broken pipe" :
+            print(".")
+        else :
+            st.write(f'Erreur lors du téléchargement : {e}')
+            return None
 
 # Function to download an Instagram reel
 def download_instagram_reel(url):
