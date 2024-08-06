@@ -3,15 +3,6 @@ import random
 import string
 import yt_dlp as youtube_dl
 import instaloader
-import requests
-import io
-import signal
-
-# Handle SIGPIPE to avoid broken pipe errors
-def handle_sigpipe(signum, frame):
-    pass
-
-signal.signal(signal.SIGPIPE, handle_sigpipe)
 
 def generate_password(length):
     characters = string.ascii_letters + string.digits + string.punctuation
@@ -142,7 +133,7 @@ if page == "Accueil":
 
     elif option == 'Téléchargeur de Vidéo YouTube':
         st.header('Téléchargeur de Vidéo YouTube')
-        url = st.text_input('Entrez l\'URL de la vidéo YouTube',placeholder='Ex: https://www.youtube.com/watch?v=xyz')
+        url = st.text_input('Entrez l\'URL de la vidéo YouTube', placeholder='Ex: https://www.youtube.com/watch?v=xyz')
         if st.button('Télécharger'):
             if url:
                 path = download_youtube_video(url)
@@ -151,7 +142,7 @@ if page == "Accueil":
 
     elif option == 'Téléchargeur de Reel Instagram':
         st.header('Téléchargeur de Reel Instagram')
-        url = st.text_input('Entrez l\'URL du reel Instagram',placeholder='Ex: https://www.instagram.com/reel/...')
+        url = st.text_input('Entrez l\'URL du reel Instagram', placeholder='Ex: https://www.instagram.com/reel/...')
         if st.button('Télécharger'):
             if url:
                 path = download_instagram_reel(url)
