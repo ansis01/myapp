@@ -2,6 +2,7 @@ import streamlit as st
 import random
 import string
 import yt_dlp as youtube_dl
+import instaloader
 
 # Custom CSS for styling
 st.markdown("""
