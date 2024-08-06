@@ -1,11 +1,8 @@
 import streamlit as st
 import random
 import string
-import os
 import yt_dlp as youtube_dl
 import instaloader
-from signal import signal, SIGPIPE, SIG_DFL
-
 
 
 def generate_password(length):
@@ -13,37 +10,27 @@ def generate_password(length):
     return ''.join(random.choice(characters) for i in range(length))
 
 # Fonction pour télécharger une vidéo YouTube
+
 def download_youtube_video(link):
     try:
         if (("youtube.com/watch?v=") not in link) or ("script" in link) or len(link) > 75 or ("https://" not in link):
             st.write('URL invalide.')
             return None
 
-        # Create a temporary directory to store the video file
-        download_dir = 'temp_downloads'
-        if not os.path.exists(download_dir):
-            os.makedirs(download_dir)
-
         ydl_opts = {
-            'outtmpl': os.path.join(download_dir, 'ur_video.mp4'),
-            'noplaylist': True
+            'format': 'mp4',
+            'noplaylist': True,
+            'quiet': True
         }
 
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-            info_dict = ydl.extract_info(link, download=True)
-            video_file = ydl.prepare_filename(info_dict)
+            info_dict = ydl.extract_info(link, download=False)
+            video_url = info_dict['url']  # This provides the direct video URL
 
-        st.write(f'Téléchargement réussi. Vous pouvez trouver votre vidéo ici : {video_file}')
+        st.write('Téléchargement direct:')
+        st.markdown(f'[Télécharger la vidéo ici]({video_url})')
 
-        # Generate a download button for the video file
-        with open(video_file, "rb") as file:
-            st.download_button(
-                label="Télécharger la vidéo",
-                data=file,
-                file_name="video.mp4",
-                mime="video/mp4"
-            )
-        return video_file
+        return video_url
     except Exception as e:
         st.write(f'Erreur lors du téléchargement: {e}')
         return None
@@ -52,36 +39,29 @@ def download_youtube_video(link):
 # Fonction pour télécharger un reel Instagram
 def download_instagram_reel(url):
     try:
-        if ("instagram.com/reel/" not in url) or ("script" in url) or len(url) >80 or ("https://" not in url) :
+        if ("instagram.com/" not in url) or ("script" in url) or len(url) > 80 or ("https://" not in url):
             st.write('URL invalide.')
             return None
 
-        # Répertoire pour les reels téléchargés
-        download_dir = 'downloads'
-        if not os.path.exists(download_dir):
-            os.makedirs(download_dir)
-
         L = instaloader.Instaloader()
 
-        # Télécharger le reel
-        post = instaloader.Post.from_shortcode(L.context, url.split('/')[-2])
-        L.download_post(post, target=download_dir)
+        # Extract shortcode from URL
+        shortcode = url.split('/')[-2]
+        post = instaloader.Post.from_shortcode(L.context, shortcode)
 
-        # Chercher le fichier téléchargé
-        reel_path = None
-        for filename in os.listdir(download_dir):
-            if filename.endswith('.mp4'):
-                reel_path = os.path.join(download_dir, filename)
-                break
+        # Extract video URL
+        video_url = post.video_url
 
-        if reel_path:
-            st.write(f'Téléchargement réussi. Vous pouvez trouver votre reel ici : {reel_path}')
-            return reel_path
+        if video_url:
+            # Generate a direct download link
+            st.write('Téléchargement direct:')
+            st.markdown(f'[Télécharger le reel ici]({video_url})')
+            return video_url
         else:
             st.write('Aucun reel trouvé.')
             return None
     except Exception as e:
-        st.write(f'Erreur lors du téléchargement ')
+        st.write(f'Erreur lors du téléchargement: {e}')
         return None
 
 # Fonction pour afficher la barre de navigation
