@@ -6,6 +6,7 @@ import yt_dlp as youtube_dl
 import instaloader
 
 
+
 def generate_password(length):
     characters = string.ascii_letters + string.digits + string.punctuation
     return ''.join(random.choice(characters) for i in range(length))
@@ -13,10 +14,12 @@ def generate_password(length):
 # Fonction pour télécharger une vidéo YouTube
 def download_youtube_video(link):
     try:
-        if (("youtube.com/watch?v=") not in link ) or ("script" in link) or len(link) >75 or ("https://" not in link):
+        if (("youtube.com/watch?v=") not in link) or ("script" in link) or len(link) > 75 or ("https://" not in link):
             st.write('URL invalide.')
             return None
-        download_dir = 'downloads'
+
+        # Create a temporary directory to store the video file
+        download_dir = 'temp_downloads'
         if not os.path.exists(download_dir):
             os.makedirs(download_dir)
 
@@ -30,10 +33,20 @@ def download_youtube_video(link):
             video_file = ydl.prepare_filename(info_dict)
 
         st.write(f'Téléchargement réussi. Vous pouvez trouver votre vidéo ici : {video_file}')
+
+        # Generate a download button for the video file
+        with open(video_file, "rb") as file:
+            st.download_button(
+                label="Télécharger la vidéo",
+                data=file,
+                file_name="video.mp4",
+                mime="video/mp4"
+            )
         return video_file
     except Exception as e:
-        st.write(f'Erreur lors du téléchargement ')
+        st.write(f'Erreur lors du téléchargement: {e}')
         return None
+
 
 # Fonction pour télécharger un reel Instagram
 def download_instagram_reel(url):
