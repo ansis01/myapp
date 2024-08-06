@@ -13,24 +13,27 @@ def generate_password(length):
 # Fonction pour télécharger une vidéo YouTube
 def download_youtube_video(link):
     try:
-        if (("youtube.com/watch?v=") not in link) or ("script" in link) or len(link) > 75 or ("https://" not in link):
+        if not (("youtube.com/watch?v=") in link and "https://" in link and len(link) <= 75):
             st.write('URL invalide.')
             return None
 
         ydl_opts = {
-            'format': 'mp4',
+            'format': 'bestvideo+bestaudio/best',
             'noplaylist': True,
             'quiet': True
         }
 
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(link, download=False)
-            video_url = info_dict['url']  # This provides the direct video URL
+            video_url = info_dict['url']
 
-        st.write('Téléchargement direct:')
-        st.markdown(f'[Télécharger la vidéo ici]({video_url})')
-
-        return video_url
+        if video_url:
+            st.write('Téléchargement direct:')
+            st.markdown(f'[Télécharger la vidéo ici]({video_url})')
+            return video_url
+        else:
+            st.write('Aucun URL de vidéo trouvé.')
+            return None
     except RequestException as e:
         st.write(f'Erreur lors du téléchargement: {e}')
         return None
@@ -38,20 +41,16 @@ def download_youtube_video(link):
         st.write(f'Erreur inconnue lors du téléchargement: {e}')
         return None
 
-# Fonction pour télécharger un reel Instagram
+# Function to download an Instagram reel
 def download_instagram_reel(url):
     try:
-        if ("instagram.com/reel/" not in url) or ("script" in url) or len(url) > 95 or ("https://" not in url):
+        if not (("instagram.com/reel/" in url) and "https://" in url and len(url) <= 95):
             st.write('URL invalide.')
             return None
 
         L = instaloader.Instaloader()
-
-        # Extract shortcode from URL
         shortcode = url.split('/')[-2]
         post = instaloader.Post.from_shortcode(L.context, shortcode)
-
-        # Extract video URL
         video_url = post.video_url
 
         if video_url:
@@ -67,7 +66,7 @@ def download_instagram_reel(url):
     except Exception as e:
         st.write(f'Erreur inconnue lors du téléchargement: {e}')
         return None
-
+        
 # Fonction pour afficher la barre de navigation
 def show_navigation():
     st.sidebar.title('Navigation')
