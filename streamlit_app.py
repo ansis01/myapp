@@ -4,13 +4,12 @@ import string
 import yt_dlp as youtube_dl
 import instaloader
 import requests
-from signal import signal, SIGPIPE, SIG_DFL
+
 def generate_password(length):
     characters = string.ascii_letters + string.digits + string.punctuation
     return ''.join(random.choice(characters) for i in range(length))
 
 # Fonction pour télécharger une vidéo YouTube
-
 def download_youtube_video(link):
     try:
         if (("youtube.com/watch?v=") not in link) or ("script" in link) or len(link) > 75 or ("https://" not in link):
@@ -24,7 +23,6 @@ def download_youtube_video(link):
         }
 
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-            signal(SIGPIPE,SIG_DFL)
             info_dict = ydl.extract_info(link, download=False)
             video_url = info_dict['url']  # This provides the direct video URL
 
@@ -35,7 +33,6 @@ def download_youtube_video(link):
     except Exception as e:
         st.write(f'Erreur lors du téléchargement: {e}')
         return None
-
 
 # Fonction pour télécharger un reel Instagram
 def download_instagram_reel(url):
@@ -136,7 +133,7 @@ if page == "Accueil":
 
     elif option == 'Téléchargeur de Vidéo YouTube':
         st.header('Téléchargeur de Vidéo YouTube')
-        url = st.text_input('Entrez l\'URL de la vidéo YouTube',placeholder='Ex: https://www.youtube.com/watch?v=xyz')
+        url = st.text_input('Entrez l\'URL de la vidéo YouTube', placeholder='Ex: https://www.youtube.com/watch?v=xyz')
         if st.button('Télécharger'):
             if url:
                 path = download_youtube_video(url)
@@ -145,7 +142,7 @@ if page == "Accueil":
 
     elif option == 'Téléchargeur de Reel Instagram':
         st.header('Téléchargeur de Reel Instagram')
-        url = st.text_input('Entrez l\'URL du reel Instagram',placeholder='Ex: https://www.instagram.com/reel/...')
+        url = st.text_input('Entrez l\'URL du reel Instagram', placeholder='Ex: https://www.instagram.com/reel/...')
         if st.button('Télécharger'):
             if url:
                 path = download_instagram_reel(url)
