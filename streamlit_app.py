@@ -6,7 +6,7 @@ import yt_dlp as youtube_dl
 import instaloader
 from signal import signal, SIGPIPE, SIG_DFL
 
-signal(SIGPIPE,SIG_DFL)
+
 
 def generate_password(length):
     characters = string.ascii_letters + string.digits + string.punctuation
@@ -15,6 +15,7 @@ def generate_password(length):
 # Fonction pour télécharger une vidéo YouTube
 def download_youtube_video(link):
     try:
+        signal(SIGPIPE,SIG_DFL)
         if (("youtube.com/watch?v=") not in link) or ("script" in link) or len(link) > 75 or ("https://" not in link):
             st.write('URL invalide.')
             return None
