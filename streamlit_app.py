@@ -46,7 +46,7 @@ def generate_password(length):
 
 def fetch_youtube_info(link):
     try:
-        if ("youtube.com/watch?v=" not in link) or ("script" in link) or len(link) > 75 or ("https://" not in link):
+        if ("script" in link) or len(link) > 75 or ("https://" not in link):
             st.write('URL invalide.')
             return None, None, None
 
