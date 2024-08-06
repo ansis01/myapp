@@ -76,6 +76,7 @@ def main_page():
     st.title('Outils en Ligne')
     st.write('Bienvenue sur notre site d\'outils en ligne. Sélectionnez un outil dans le menu à gauche.')
 
+
 def about_us():
     st.title('Qui sommes-nous ?')
     st.write('Nous sommes une équipe dédiée à fournir des outils en ligne pratiques et utiles.')
@@ -95,10 +96,11 @@ def share():
 def search_tool(tools, query):
     return [tool for tool in tools if query.lower() in tool.lower()]
 
-tools = ['Téléchargeur de Vidéo YouTube', 'Générateur de Mot de Passe']
+tools = ['','Téléchargeur de Vidéo YouTube', 'Générateur de Mot de Passe']
 
 show_navigation()
 page = st.sidebar.radio("Choisissez une page", ["Accueil", "Qui sommes-nous ?", "Futurs outils", "Faire un don", "Partager"])
+
 
 if page == "Accueil":
     main_page()
@@ -112,14 +114,14 @@ elif page == "Partager":
     share()
 
 # Search bar
-query = st.text_input('Chercher une outil', placeholder='Rechercher...')
 
-if query:
-    search_results = search_tool(tools, query)
-else:
-    search_results = tools
 
 if page == "Accueil":
+    query = st.text_input('Chercher une outil', placeholder='Rechercher...')
+    if query:
+        search_results = search_tool(tools, query)
+    else:
+        search_results = tools
     st.header('Outils disponibles')
     option = st.selectbox('Choisissez un outil', search_results)
 
