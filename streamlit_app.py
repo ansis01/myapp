@@ -33,7 +33,7 @@ def download_youtube_video(link):
         return video_url
     
     except Exception as e  :
-        if e == "123" :
+        if e == " [Errno 32] Broken pipe" :
            st.write(f'Erreur lors du téléchargement')
         else :     
             st.write(f'Erreur lors du téléchargement')
