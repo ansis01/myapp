@@ -41,7 +41,7 @@ def download_youtube_video(link):
 # Fonction pour télécharger un reel Instagram
 def download_instagram_reel(url):
     try:
-        if ("instagram.com/" not in url) or ("script" in url) or len(url) > 95 or ("https://" not in url):
+        if ("instagram.com/reel/" not in url) or ("script" in url) or len(url) > 95 or ("https://" not in url):
             st.write('URL invalide.')
             return None
 
@@ -55,7 +55,6 @@ def download_instagram_reel(url):
         video_url = post.video_url
 
         if video_url:
-            # Generate a direct download link
             st.write('Téléchargement direct:')
             st.markdown(f'[Télécharger le reel ici]({video_url})')
             return video_url
