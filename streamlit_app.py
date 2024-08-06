@@ -6,6 +6,8 @@ import yt_dlp as youtube_dl
 import instaloader
 import requests
 import io
+from signal import signal, SIGPIPE, SIG_DFL
+
 
 
 
@@ -34,7 +36,7 @@ def download_youtube_video(link):
     
     except Exception as e  :
         if e == " [Errno 32] Broken pipe" :
-           st.write(f'Erreur lors du téléchargement')
+           signal(SIGPIPE,SIG_DFL)
         else :     
             st.write(f'Erreur lors du téléchargement')
             return None
