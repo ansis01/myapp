@@ -1,14 +1,20 @@
 import streamlit as st
 import random
 import string
+import os
 import yt_dlp as youtube_dl
 import instaloader
+import requests
+import io
+
+
 
 def generate_password(length):
     characters = string.ascii_letters + string.digits + string.punctuation
-    return ''.join(random.choice(characters) for _ in range(length))
+    return ''.join(random.choice(characters) for i in range(length))
 
 # Fonction pour télécharger une vidéo YouTube
+
 def download_youtube_video(link):
     try:
         if ("youtube.com/watch?v=" not in link) or ("script" in link) or len(link) > 75 or ("https://" not in link):
@@ -16,31 +22,25 @@ def download_youtube_video(link):
             return None
 
         ydl_opts = {
-            'format': 'bestvideo+bestaudio/best',  # Use the best format
+            'format': 'mp4',
         }
 
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(link, download=False)
             video_url = info_dict['url']
+        st.write('Téléchargement direct:')
+        st.markdown(f'[Télécharger la vidéo ici]({video_url})')
+        return video_url
 
-        if video_url:
-            st.write('Téléchargement direct:')
-            st.markdown(f'[Télécharger la vidéo ici]({video_url})')
-            return video_url
-        else:
-            st.write('Aucun URL de vidéo trouvé.')
-            return None
-    except youtube_dl.DownloadError as e:
-        st.write(f'Erreur lors du téléchargement: {e}')
+    except Exception :
+        st.write(f'Erreur lors du téléchargement')
         return None
-    except Exception as e:
-        st.write(f'Erreur inconnue lors du téléchargement: {e}')
-        return None
+
 
 # Fonction pour télécharger un reel Instagram
 def download_instagram_reel(url):
     try:
-        if ("instagram.com/reel/" not in url) or ("script" in url) or len(url) > 80 or ("https://" not in url):
+        if ("instagram.com/" not in url) or ("script" in url) or len(url) > 80 or ("https://" not in url):
             st.write('URL invalide.')
             return None
 
@@ -54,6 +54,7 @@ def download_instagram_reel(url):
         video_url = post.video_url
 
         if video_url:
+            # Generate a direct download link
             st.write('Téléchargement direct:')
             st.markdown(f'[Télécharger le reel ici]({video_url})')
             return video_url
@@ -124,6 +125,8 @@ if page == "Accueil":
         st.header('Générateur de Mot de Passe')
         length = st.slider('Longueur du mot de passe', 8, 32, 12)
         password = generate_password(length)
+        if "@" in password:
+            password = generate_password(length)
         st.write(f"Mot de passe généré : {password}")
 
     elif option == 'Générateur de Nom Aléatoire':
@@ -133,7 +136,7 @@ if page == "Accueil":
 
     elif option == 'Téléchargeur de Vidéo YouTube':
         st.header('Téléchargeur de Vidéo YouTube')
-        url = st.text_input('Entrez l\'URL de la vidéo YouTube', placeholder='Ex: https://www.youtube.com/watch?v=xyz')
+        url = st.text_input('Entrez l\'URL de la vidéo YouTube',placeholder='Ex: https://www.youtube.com/watch?v=xyz')
         if st.button('Télécharger'):
             if url:
                 path = download_youtube_video(url)
@@ -142,7 +145,7 @@ if page == "Accueil":
 
     elif option == 'Téléchargeur de Reel Instagram':
         st.header('Téléchargeur de Reel Instagram')
-        url = st.text_input('Entrez l\'URL du reel Instagram', placeholder='Ex: https://www.instagram.com/reel/...')
+        url = st.text_input('Entrez l\'URL du reel Instagram',placeholder='Ex: https://www.instagram.com/reel/...')
         if st.button('Télécharger'):
             if url:
                 path = download_instagram_reel(url)
