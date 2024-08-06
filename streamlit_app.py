@@ -44,7 +44,7 @@ def download_youtube_video(link):
 # Function to download an Instagram reel
 def download_instagram_reel(url):
     try:
-        if not (("instagram.com/reel/" in url) and "https://" in url and len(url) <= 95):
+        if not (("instagram.com/" in url) and "https://" in url and len(url) <= 95):
             st.write('URL invalide.')
             return None
 
