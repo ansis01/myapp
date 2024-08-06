@@ -4,6 +4,7 @@ import string
 import yt_dlp as youtube_dl
 import instaloader
 import requests
+from requests.exceptions import RequestException
 
 def generate_password(length):
     characters = string.ascii_letters + string.digits + string.punctuation
@@ -30,8 +31,11 @@ def download_youtube_video(link):
         st.markdown(f'[Télécharger la vidéo ici]({video_url})')
 
         return video_url
-    except Exception as e:
+    except RequestException as e:
         st.write(f'Erreur lors du téléchargement: {e}')
+        return None
+    except Exception as e:
+        st.write(f'Erreur inconnue lors du téléchargement: {e}')
         return None
 
 # Fonction pour télécharger un reel Instagram
@@ -58,8 +62,11 @@ def download_instagram_reel(url):
         else:
             st.write('Aucun reel trouvé.')
             return None
-    except Exception as e:
+    except RequestException as e:
         st.write(f'Erreur lors du téléchargement: {e}')
+        return None
+    except Exception as e:
+        st.write(f'Erreur inconnue lors du téléchargement: {e}')
         return None
 
 # Fonction pour afficher la barre de navigation
